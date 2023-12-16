@@ -1,5 +1,5 @@
 <template>
-    <ul>
+    <ul class="flex flex-col gap-2">
         <li v-for="transaction in transactions" :key="transaction.id">
             <Transaction :transaction="transaction" />
         </li>

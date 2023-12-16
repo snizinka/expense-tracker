@@ -1,6 +1,8 @@
 <template>
-    <h3>Your Balance</h3>
-    <strong>${{ total }}</strong>
+    <div>
+        <h3 class="text-xl font-semibold uppercase">Your Balance</h3>
+        <strong class="text-3xl font-bold">${{ total }}</strong>
+    </div>
 </template>
 
 <script setup lang="ts">

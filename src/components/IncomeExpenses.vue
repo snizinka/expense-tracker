@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div class="flex w-full p-3 shadow-3xl justify-center gap-10">
         <div>
-            <h4>Income</h4>
-            <span>+$ {{ income }}</span>
+            <h4 class="text-sm font-semibold uppercase">Income</h4>
+            <span class="text-green-500 font-bold">+${{ income }}</span>
         </div>
         <div>
-            <h4>Expanse</h4>
-            <span>-$ {{ expanses }}</span>
+            <h4 class="text-sm font-semibold uppercase">Expanse</h4>
+            <span class="text-rose-700 font-bold">-${{ -expanses }}</span>
         </div>
     </div>
 </template>
