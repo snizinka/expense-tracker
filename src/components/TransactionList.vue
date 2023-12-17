@@ -7,12 +7,13 @@
 </template>
 
 <script setup lang="ts">
-import Transaction from './Transaction.vue';
+import Transaction from './Transaction/Transaction.vue';
 import { defineProps } from 'vue'
+import type { ITransaction } from './Transaction/types';
 
 defineProps({
     transactions: {
-        type: [],
+        type: Array as () => ITransaction[],
         required: true
     }
 })

@@ -12,16 +12,14 @@
 
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
+import type { ITransaction } from './types';
 
-export interface ITransaction {
-    id: number,
-    text: string,
-    amountOfMoney: number,
-    transactionType: string
-}
+const props = defineProps({
+    transaction: {
+        type: Object as () => ITransaction,
+        required: true
+    }
+});
 
-const props = defineProps<{
-    transaction: ITransaction
-}>()
-const isTransactionPositive = computed(() => props.transaction.transactionType === 'income')
+const isTransactionPositive = computed((): boolean => props.transaction.transactionType === 'income')
 </script>

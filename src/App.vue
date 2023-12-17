@@ -9,7 +9,7 @@
       </div>
       <div>
         <h3 class="text-lg font-semibold border-b-2 border-stone-400 mb-2">Add new transaction</h3>
-        <AddTransaction />
+        <AddTransaction @transactionSubmitted="onTransactionSubmitted" />
       </div>
     </div>
   </main>
@@ -20,10 +20,12 @@ import Balance from './components/Balance.vue';
 import IncomeExpenses from './components/IncomeExpenses.vue';
 import AddTransaction from './components/AddTransaction.vue';
 import TransactionList from './components/TransactionList.vue';
-import { ref, computed } from 'vue'
-import { ITransaction } from './components/Transaction.vue';
+import { ref, computed, watch } from 'vue'
+import type { ITransaction } from './components/Transaction/types';
+import { useToast } from 'vue-toastification'
 
-const transactions = ref([
+const toast = useToast()
+const transactions = ref<ITransaction[]>([
   { id: 1, text: 'Book', amountOfMoney: -12, transactionType: 'expanse' },
   { id: 2, text: 'Coffee', amountOfMoney: -4, transactionType: 'expanse' },
   { id: 3, text: 'Friend returned my money back', amountOfMoney: 52, transactionType: 'income' },
@@ -31,23 +33,45 @@ const transactions = ref([
   { id: 5, text: 'Tooth paste', amountOfMoney: -11, transactionType: 'expanse' },
 ])
 
-const total = computed(() => {
-  return transactions.value.reduce((accumulator: number, transaction: ITransaction) => {
+const prevTransactionsLength = ref<number>(transactions.value.length)
+
+const total = computed((): number => {
+  return transactions.value.reduce((accumulator: number, transaction: ITransaction): number => {
     return accumulator + transaction.amountOfMoney
   }, 0)
 })
 
-const income = computed(() => {
-  return transactions.value.filter((transaction: ITransaction) => transaction.amountOfMoney > 0).
-    reduce((accumulator: number, transaction: ITransaction) => {
+const income = computed((): number => {
+  return parseFloat(
+    transactions.value.filter((transaction: ITransaction): boolean => transaction.amountOfMoney > 0).
+    reduce((accumulator: number, transaction: ITransaction): number => {
       return accumulator + transaction.amountOfMoney
     }, 0).toFixed(2)
+  )
 })
 
-const expanses = computed(() => {
-  return transactions.value.filter((transaction: ITransaction) => transaction.amountOfMoney < 0).
-    reduce((accumulator: number, transaction: ITransaction) => {
+const expanses = computed((): number => {
+  return parseFloat(
+    transactions.value.filter((transaction: ITransaction): boolean => transaction.amountOfMoney < 0).
+    reduce((accumulator: number, transaction: ITransaction): number => {
       return accumulator + transaction.amountOfMoney
     }, 0).toFixed(2)
+  )
 })
+
+const onTransactionSubmitted = (transaction: ITransaction): void => {
+  transactions.value.push({
+    id: transaction.id,
+    text: transaction.text,
+    amountOfMoney: transaction.amountOfMoney,
+    transactionType: transaction.transactionType
+  })
+}
+
+watch(transactions, (newTransactionsState: ITransaction[]): void => {
+  if (prevTransactionsLength.value < newTransactionsState.length) {
+    toast.success('Transaction added successfuly')
+    prevTransactionsLength.value = newTransactionsState.length
+  }
+}, { deep: true })
 </script>
